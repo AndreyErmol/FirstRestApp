@@ -2,13 +2,19 @@ package ermolaev.dao;
 
 import ermolaev.models.abstractions.Worker;
 import java.net.http.HttpClient;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WorkerDAO {
-    public <T extends Worker> ResponseEntity<?> addWorker(T worker) {
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public <T extends Worker> void save(T worker, String workerPosition) {
+        jdbcTemplate.update("insert into workers(workerName, email, position) values(?, ?, ?)",
+                worker.getEmail(), worker.getName(), workerPosition);
     }
 }

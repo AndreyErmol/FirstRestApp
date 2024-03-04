@@ -17,12 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="85c38262-074b-46f9-a043-5948f4e0cc73">
-      <console name="Employee" type="STANDARD" schema="public" session="Main"><![CDATA[create table Workers (
-    id serial,
-    workerName varchar(50),
-    email varchar(100),
-    position varchar(50)
-)]]></console>
+      <console name="Employee" type="STANDARD" schema="public" session="Main"><![CDATA[select * from workers]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

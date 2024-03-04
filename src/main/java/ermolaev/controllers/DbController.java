@@ -3,6 +3,7 @@ package ermolaev.controllers;
 import ermolaev.dao.WorkerDAO;
 import ermolaev.models.abstractions.Worker;
 import ermolaev.models.impl.BackendDeveloper;
+import ermolaev.service.WorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("db/")
 public class DbController {
     @Autowired
-    private WorkerDAO workerDAO;
+    private WorkerService workerService;
 
     @PostMapping("add")
     @ResponseStatus(HttpStatus.CREATED)
     public <T extends Worker> void first(@RequestBody T worker) {
-        System.out.println(worker.getName());
-        System.out.println(worker.getEmail());
-        System.out.println(worker.getClass());
-        worker.doJob();
-        workerDAO.addWorker(worker);
+        workerService.addWorker(worker);
     }
 }
