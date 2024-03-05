@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
+import org.hibernate.jdbc.Work;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "position")
 @JsonSubTypes({
@@ -15,13 +16,22 @@ import ermolaev.models.impl.FrontendDeveloper;
 public abstract class Worker {
     private String name;
     private String email;
+    private String position;
+
+    public Worker() {
+    }
 
     public Worker(String name, String email) {
         this.name = name;
         this.email = email;
     }
 
-    public Worker() {
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getName() {
