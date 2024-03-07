@@ -52,6 +52,14 @@
       <artifactId>hibernate-core</artifactId>
       <version>6.4.4.Final</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>3.2.3</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>FirstRestProject</finalName>

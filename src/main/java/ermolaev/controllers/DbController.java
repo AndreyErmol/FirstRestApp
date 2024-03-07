@@ -1,21 +1,59 @@
 package ermolaev.controllers;
 
-import ermolaev.dao.WorkerDAO;
 import ermolaev.models.abstractions.Worker;
 import ermolaev.service.WorkerService;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("db/")
-public class DbController {
-    @Autowired
-    private WorkerService workerService;
+import java.util.List;
 
-    @PostMapping("add")
+@RestController
+@RequestMapping("/db/")
+public class DbController {
+    private final WorkerService workerService;
+
+    @Autowired
+    public DbController(WorkerService workerService) {
+        this.workerService = workerService;
+    }
+
+    @PostMapping("worker/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public <T extends Worker> void first(@RequestBody T worker) {
-        workerService.addWorker(worker);
+    public Worker addNewWorker(@RequestBody Worker worker) {
+        return workerService.addWorker(worker);
+    }
+
+    @GetMapping("worker/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Worker getWorkerById(@PathVariable("id") int id) {
+        return workerService.getWorkerById(id);
+    }
+
+    @GetMapping("workers")
+    @ResponseStatus(HttpStatus.FOUND)
+    public List<Worker> getAllWorkers() {
+        return workerService.getAllWorkers();
+    }
+
+    @DeleteMapping("worker/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteWorkerById(@PathVariable("id") int id) {
+        workerService.deleteWorkerById(id);
+    }
+
+    @DeleteMapping("worker")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteWorkerByNameAndEmail(@RequestParam("name") String name,
+                                           @RequestParam("email") String email) {
+        workerService.deleteWorkerByNameAndEmail(name, email);
+    }
+
+    @GetMapping("worker/find/id")
+    @ResponseStatus(HttpStatus.FOUND)
+    public int findWorkerId(@RequestParam("name") String name,
+                            @RequestParam("email") String email) {
+        return workerService.findWorkerId(name, email);
     }
 }

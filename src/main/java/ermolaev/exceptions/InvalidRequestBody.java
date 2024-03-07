@@ -3,8 +3,8 @@ package ermolaev.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class FailedToSaveResource extends RuntimeException {
-    public FailedToSaveResource(String message) {
+public class InvalidRequestBody extends RuntimeException {
+    public InvalidRequestBody(String message) {
         super(message);
     }
 }

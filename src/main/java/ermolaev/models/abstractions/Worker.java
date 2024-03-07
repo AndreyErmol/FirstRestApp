@@ -6,6 +6,12 @@ import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
 import jakarta.persistence.*;
+import org.hibernate.jdbc.Work;
+
+import javax.swing.plaf.OptionPaneUI;
+import javax.swing.text.html.Option;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "workers")
@@ -18,9 +24,11 @@ import jakarta.persistence.*;
 public abstract class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
-    @Column(name = "workername")
+    @Column(name = "workername", nullable = false)
     private String name;
+    @Column(name = "email", nullable = false)
     private String email;
 
     public Worker() {
@@ -50,7 +58,41 @@ public abstract class Worker {
     public abstract void doJob();
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int hash = 1;
+        hash = hash * prime + ((name == null) ? 0 : name.hashCode());
+        hash = hash * prime + (email == null ? 0 : email.hashCode());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || !obj.getClass().equals(this.getClass())) {
+            return false;
+        }
+
+        Worker workerToCompare = (Worker) obj;
+
+        return (Objects.equals(workerToCompare.name, this.name) &&
+                Objects.equals(workerToCompare.email, this.email));
+    }
+
+    @Override
     public String toString() {
-        return "Worker{name: " + name + ", email: " + email + "}";
+        var className = "Worker";
+
+        if (getClass().equals(BackendDeveloper.class)) {
+            className = "Backend developer";
+        } else if (getClass().equals(FrontendDeveloper.class)) {
+            className = "Frontend developer";
+        } else if (getClass().equals(DataScientist.class)) {
+            className = "Data scientist";
+        }
+        return className + " {name: " + name + ", email: " + email + "}";
     }
 }
