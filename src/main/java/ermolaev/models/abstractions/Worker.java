@@ -6,12 +6,8 @@ import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
 import jakarta.persistence.*;
-import org.hibernate.jdbc.Work;
 
-import javax.swing.plaf.OptionPaneUI;
-import javax.swing.text.html.Option;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Table(name = "workers")

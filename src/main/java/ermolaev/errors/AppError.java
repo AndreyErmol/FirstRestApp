@@ -1,7 +1,5 @@
 package ermolaev.errors;
 
-import org.springframework.http.HttpStatusCode;
-
 public class AppError {
     private int statusCode;
     private String message;

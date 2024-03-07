@@ -1,12 +1,7 @@
 package ermolaev.database;
 
 import ermolaev.exceptions.DatabaseConnectException;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Indexed;
-import org.springframework.web.bind.annotation.PostMapping;
 
 public class DatabaseChecker {
     public static void checkConnection(JdbcTemplate jdbcTemplate) {
