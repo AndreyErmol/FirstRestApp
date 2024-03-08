@@ -1,5 +1,6 @@
-package ermolaev.database.repos;
+package ermolaev.service;
 
+import ermolaev.database.repos.WorkerRepository;
 import ermolaev.exceptions.InvalidIdValue;
 import ermolaev.exceptions.InvalidPositionValue;
 import ermolaev.exceptions.NoWorkerFound;
@@ -7,15 +8,9 @@ import ermolaev.models.abstractions.Worker;
 import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
-import ermolaev.service.WorkerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,9 +19,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class WorkerRepositoryTest {
+class WorkerServiceTest {
     private WorkerService workerService;
     @Autowired
     WorkerRepository workerRepository;
