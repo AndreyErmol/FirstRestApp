@@ -55,4 +55,16 @@ public class DbController {
                             @RequestParam("email") String email) {
         return workerService.findWorkerId(name, email);
     }
+
+    @GetMapping("workers/find/by/name/{name}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public List<Worker> findAllWorkersByName(@PathVariable("name") String name) {
+        return workerService.findAllWorkersByName(name);
+    }
+
+    @GetMapping("workers/find/by/position/{position}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public List<Worker> findAllWorkersByPosition(@PathVariable("position") String position) {
+        return workerService.findAllWorkersByPosition(position);
+    }
 }

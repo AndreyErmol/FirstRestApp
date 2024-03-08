@@ -2,6 +2,7 @@ package ermolaev.service;
 
 import ermolaev.database.repos.WorkerRepository;
 import ermolaev.exceptions.InvalidIdValue;
+import ermolaev.exceptions.InvalidPositionValue;
 import ermolaev.exceptions.InvalidRequestBody;
 import ermolaev.exceptions.NoWorkerFound;
 import ermolaev.models.abstractions.Worker;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +67,29 @@ public class WorkerService {
         if (ans.isPresent())
             return ans.get();
         throw new NoWorkerFound("Couldn't find an employee with name " + name + " and email " + email);
+    }
+
+    @Transactional
+    public List<Worker> findAllWorkersByName(String name) {
+        Optional<List<Worker>> workerList = workerRepository.findAllWorkersByName(name);
+        if (workerList.isPresent() && !workerList.get().isEmpty()) {
+            return workerList.get();
+        }
+        throw new NoWorkerFound("No worker found with name " + name);
+    }
+
+    @Transactional
+    public List<Worker> findAllWorkersByPosition(String position) {
+        if (!position.equalsIgnoreCase("BackendDeveloper") &&
+            !position.equalsIgnoreCase("FrontendDeveloper") &&
+            !position.equalsIgnoreCase("DataScientist")) {
+            throw new InvalidPositionValue("There is no position with name " + position);
+        }
+
+        Optional<List<Worker>> workerList = workerRepository.findAllWorkersByPosition(position);
+        if (workerList.isPresent() && !workerList.get().isEmpty()) {
+            return workerList.get();
+        }
+        throw new NoWorkerFound("No worker found with position " + position);
     }
 }

@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), e.getMessage()),
                                         HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> catchInvalidPositionValue(InvalidPositionValue e) {
+        return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), e.getMessage()),
+                                    HttpStatus.BAD_REQUEST);
+    }
 }

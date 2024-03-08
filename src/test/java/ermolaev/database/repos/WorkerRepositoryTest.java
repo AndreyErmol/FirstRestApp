@@ -6,7 +6,6 @@ import ermolaev.models.abstractions.Worker;
 import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.FrontendDeveloper;
 import ermolaev.service.WorkerService;
-import org.hibernate.jdbc.Work;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,8 @@ class WorkerRepositoryTest {
 
     @Test
     void getWorkerById_workerExists_shouldReturnWorker() {
+        initializeElements();
         int workerId = 1;
-        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
 
         Worker worker = workerService.getWorkerById(workerId);
 
@@ -69,10 +67,8 @@ class WorkerRepositoryTest {
     }
 
     @Test
-    void getAllWorkers_shouldReturnAllWorkersAsList() {
-        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
+    void getAllWorkers_shouldReturnAllWorkersList() {
+        initializeElements();
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
                 new FrontendDeveloper("Alex", "alex@email.com"),
@@ -86,9 +82,7 @@ class WorkerRepositoryTest {
 
     @Test
     void deleteWorkerById_workerExists_shouldDeleteWorker() {
-        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
+        initializeElements();
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
@@ -104,9 +98,7 @@ class WorkerRepositoryTest {
 
     @Test
     void deleteWorkerById_workerDoesNotExists_shouldNotDeleteAnything() {
-        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
-        testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
+        initializeElements();
         int workerId = 4;
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
@@ -119,5 +111,77 @@ class WorkerRepositoryTest {
         List<Worker> workerList = workerService.getAllWorkers();
         assertThat(workerList).isNotNull();
         assertEquals(workerList, shouldGet);
+    }
+
+    @Test
+    void addWorker() {
+        Worker workerToAdd = new BackendDeveloper("Andrew", "andrew@email.com");
+
+        workerService.addWorker(workerToAdd);
+
+        List<Worker> workerList = workerService.getAllWorkers();
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(1);
+        assertEquals(workerList.get(0), workerToAdd);
+    }
+
+    @Test
+    void deleteWorkerByNameAndEmail_workerExists_shouldDeleteWorker() {
+        initializeElements();
+        String name = "Alex";
+        String email = "alex@email.com";
+
+        workerService.deleteWorkerByNameAndEmail(name, email);
+
+        List<Worker> workerList = workerService.getAllWorkers();
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(2);
+        assertEquals(workerList, new ArrayList<>(Arrays.asList(
+                new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new FrontendDeveloper("Michael", "michael@yandex.ru")
+        )));
+    }
+
+    @Test
+    void deleteWorkerByNameAndEmail_workerDoesNotExists_shouldThrowException() {
+        initializeElements();
+        String name = "Test";
+        String email = "test@email.com";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.deleteWorkerByNameAndEmail(name, email));
+
+        List<Worker> workerList = workerService.getAllWorkers();
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(3);
+        assertEquals(workerList, new ArrayList<>(Arrays.asList(
+                new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new FrontendDeveloper("Alex", "alex@email.com"),
+                new FrontendDeveloper("Michael", "michael@yandex.ru")
+        )));
+    }
+
+    @Test
+    void findWorkerId_workerExists_shouldReturnWorkerId() {
+        initializeElements();
+        String name = "Alex";
+        String email = "alex@email.com";
+
+        int id = workerService.findWorkerId(name, email);
+
+        assertEquals(id, 2);
+    }
+
+    @Test
+    void findWorkerId_workerExists_shouldThrowException() {
+        String name = "test";
+        String email = "test";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.findWorkerId(name, email));
+    }
+
+    void initializeElements() {
+        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
+        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
+        testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
     }
 }
