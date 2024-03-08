@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,12 +55,12 @@ public class WorkerService {
 
     @Transactional
     public void deleteWorkerByNameAndEmail(String name, String email) {
-        int id = findWorkerId(name, email);
+        int id = getWorkerId(name, email);
         deleteWorkerById(id);
     }
 
     @Transactional
-    public int findWorkerId(String name, String email) {
+    public int getWorkerId(String name, String email) {
         Optional<Integer> ans = workerRepository.findIdByNameAndEmail(name, email);
         if (ans.isPresent())
             return ans.get();
@@ -70,7 +68,7 @@ public class WorkerService {
     }
 
     @Transactional
-    public List<Worker> findAllWorkersByName(String name) {
+    public List<Worker> getAllWorkersByName(String name) {
         Optional<List<Worker>> workerList = workerRepository.findAllWorkersByName(name);
         if (workerList.isPresent() && !workerList.get().isEmpty()) {
             return workerList.get();
@@ -79,7 +77,7 @@ public class WorkerService {
     }
 
     @Transactional
-    public List<Worker> findAllWorkersByPosition(String position) {
+    public List<Worker> getAllWorkersByPosition(String position) {
         if (!position.equalsIgnoreCase("BackendDeveloper") &&
             !position.equalsIgnoreCase("FrontendDeveloper") &&
             !position.equalsIgnoreCase("DataScientist")) {

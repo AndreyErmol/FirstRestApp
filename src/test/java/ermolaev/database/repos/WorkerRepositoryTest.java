@@ -1,9 +1,11 @@
 package ermolaev.database.repos;
 
 import ermolaev.exceptions.InvalidIdValue;
+import ermolaev.exceptions.InvalidPositionValue;
 import ermolaev.exceptions.NoWorkerFound;
 import ermolaev.models.abstractions.Worker;
 import ermolaev.models.impl.BackendDeveloper;
+import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
 import ermolaev.service.WorkerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +73,7 @@ class WorkerRepositoryTest {
         initializeElements();
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new DataScientist("Andrew", "secondAndrew@email.com"),
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")));
 
@@ -84,6 +87,7 @@ class WorkerRepositoryTest {
     void deleteWorkerById_workerExists_shouldDeleteWorker() {
         initializeElements();
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
+                new DataScientist("Andrew", "secondAndrew@email.com"),
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         ));
@@ -99,9 +103,10 @@ class WorkerRepositoryTest {
     @Test
     void deleteWorkerById_workerDoesNotExists_shouldNotDeleteAnything() {
         initializeElements();
-        int workerId = 4;
+        int workerId = 1000;
         List<Worker> shouldGet = new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new DataScientist("Andrew", "secondAndrew@email.com"),
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         ));
@@ -135,9 +140,10 @@ class WorkerRepositoryTest {
 
         List<Worker> workerList = workerService.getAllWorkers();
         assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(2);
+        assertThat(workerList).hasSize(3);
         assertEquals(workerList, new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new DataScientist("Andrew", "secondAndrew@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         )));
     }
@@ -150,6 +156,86 @@ class WorkerRepositoryTest {
 
         assertThrows(NoWorkerFound.class, () -> workerService.deleteWorkerByNameAndEmail(name, email));
 
+        dataHasNotBeenChangedTest();
+    }
+
+    @Test
+    void findWorkerId_workerExists_shouldReturnWorkerId() {
+        initializeElements();
+        String name = "Alex";
+        String email = "alex@email.com";
+
+        int id = workerService.getWorkerId(name, email);
+
+        assertEquals(id, 3);
+    }
+
+    @Test
+    void findWorkerId_workerExists_shouldThrowException() {
+        String name = "test";
+        String email = "test";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.getWorkerId(name, email));
+    }
+
+    @Test
+    void findAllWorkersByName_workersExist_shouldReturnListOfWorkers() {
+        initializeElements();
+        String name = "Andrew";
+
+        List<Worker> workerList = workerService.getAllWorkersByName(name);
+
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(2);
+        assertEquals(workerList, new ArrayList<>(Arrays.asList(
+                new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new DataScientist("Andrew", "secondAndrew@email.com")
+        )));
+    }
+
+    @Test
+    void getAllWorkersByName_workersDoesNotExist_shouldThrowException() {
+        initializeElements();
+        String name = "Test";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.getAllWorkersByName(name));
+        dataHasNotBeenChangedTest();
+    }
+
+    @Test
+    void getAllWorkersByPosition_workersExist_shouldReturnListOfWorkers() {
+        initializeElements();
+        String position = "FrontendDeveloper";
+
+        List<Worker> workerList = workerService.getAllWorkersByPosition(position);
+
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(2);
+        assertEquals(workerList, new ArrayList<>(Arrays.asList(
+                new FrontendDeveloper("Alex", "alex@email.com"),
+                new FrontendDeveloper("Michael", "michael@yandex.ru")
+        )));
+    }
+
+    @Test
+    void getAllWorkersByPosition_invalidPosition_shouldThrowException() {
+        initializeElements();
+        String position = "test";
+
+        assertThrows(InvalidPositionValue.class, () -> workerService.getAllWorkersByPosition(position));
+
+        dataHasNotBeenChangedTest();
+    }
+
+    @Test
+    void getAllWorkersByPosition_noWorkersByPosition_shouldThrowException() {
+        testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
+        testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
+        testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
+        String position = "DataScientist";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.getAllWorkersByPosition(position));
+
         List<Worker> workerList = workerService.getAllWorkers();
         assertThat(workerList).isNotNull();
         assertThat(workerList).hasSize(3);
@@ -160,27 +246,21 @@ class WorkerRepositoryTest {
         )));
     }
 
-    @Test
-    void findWorkerId_workerExists_shouldReturnWorkerId() {
-        initializeElements();
-        String name = "Alex";
-        String email = "alex@email.com";
-
-        int id = workerService.findWorkerId(name, email);
-
-        assertEquals(id, 2);
-    }
-
-    @Test
-    void findWorkerId_workerExists_shouldThrowException() {
-        String name = "test";
-        String email = "test";
-
-        assertThrows(NoWorkerFound.class, () -> workerService.findWorkerId(name, email));
+    void dataHasNotBeenChangedTest() {
+        List<Worker> workerList = workerService.getAllWorkers();
+        assertThat(workerList).isNotNull();
+        assertThat(workerList).hasSize(4);
+        assertEquals(workerList, new ArrayList<>(Arrays.asList(
+                new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
+                new DataScientist("Andrew", "secondAndrew@email.com"),
+                new FrontendDeveloper("Alex", "alex@email.com"),
+                new FrontendDeveloper("Michael", "michael@yandex.ru")
+        )));
     }
 
     void initializeElements() {
         testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
+        testEntityManager.persistAndFlush(new DataScientist("Andrew", "secondAndrew@email.com"));
         testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
         testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
     }
