@@ -20,20 +20,12 @@ import java.util.Objects;
 public abstract class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private int id;
     @Column(name = "workername", nullable = false)
     private String name;
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    public Worker() {
-    }
-
-    public Worker(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
 
     public String getName() {
         return name;
@@ -51,7 +43,23 @@ public abstract class Worker {
         this.email = email;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public abstract void doJob();
+
+    public Worker() {
+    }
+
+    public Worker(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
     @Override
     public int hashCode() {

@@ -37,13 +37,13 @@ public class WorkerService {
     }
 
     @Transactional
-    public Worker getWorkerById(int id) {
-        logger.debug("Method 'getWorkerById' started working with the parameter id: '{}'", id);
+    public Worker findWorkerById(int id) {
+        logger.debug("Method 'findWorkerById' started working with the parameter id: '{}'", id);
         if (id <= 0) {
             logger.warn("ID value should be greater than 0");
             throw new InvalidIdValue("ID value should be greater than 0");
         }
-        logger.info("Method 'getWorkerById' is calling method 'findById' of worker repository.");
+        logger.info("Method 'findWorkerById' is calling method 'findById' of worker repository.");
         Optional<Worker> worker = workerRepository.findById(id);
         if (worker.isPresent()) {
             return worker.get();
@@ -55,7 +55,7 @@ public class WorkerService {
     @Transactional
     public List<Worker> getAllWorkers() {
         logger.info("Method 'getAllWorkers' is calling method 'findAll' of {}", WorkerRepository.class.getName());
-        return (List<Worker>) workerRepository.findAll();
+        return workerRepository.findAll();
     }
 
     @Transactional
@@ -70,18 +70,18 @@ public class WorkerService {
     public void deleteWorkerByNameAndEmail(String name, String email) {
         logger.debug("Method 'deleteWorkerByNameAndEmail' started working with the " +
                         "parameters name: '{}', email: '{}'", name, email);
-        logger.info("Method 'deleteWorkerByNameAndEmail' is calling method 'getWorkerId' of {}",
+        logger.info("Method 'deleteWorkerByNameAndEmail' is calling method 'findWorkerId' of {}",
                 WorkerService.class.getName());
-        int id = getWorkerId(name, email);
+        int id = findWorkerId(name, email);
         logger.info("Method 'deleteWorkerByNameAndEmail' is calling method 'deleteWorkerById' of {}",
                 WorkerService.class.getName());
         deleteWorkerById(id);
     }
 
     @Transactional
-    public int getWorkerId(String name, String email) {
-        logger.debug("Method 'getWorkerId' started working with the parameters name: '{}', email: '{}'", name, email);
-        logger.info("Method 'getWorkerId' is calling method 'findIdByNameAndEmail' of {}",
+    public int findWorkerId(String name, String email) {
+        logger.debug("Method 'findWorkerId' started working with the parameters name: '{}', email: '{}'", name, email);
+        logger.info("Method 'findWorkerId' is calling method 'findIdByNameAndEmail' of {}",
                 WorkerRepository.class.getName());
         Optional<Integer> ans = workerRepository.findIdByNameAndEmail(name, email);
         if (ans.isPresent())
@@ -91,9 +91,9 @@ public class WorkerService {
     }
 
     @Transactional
-    public List<Worker> getAllWorkersByName(String name) {
-        logger.debug("Method 'getAllWorkersByName' started working with the parameter name: '{}'", name);
-        logger.info("Method 'getAllWorkersByName' is calling method 'findAllWorkersByName' of {}",
+    public List<Worker> findAllWorkersByName(String name) {
+        logger.debug("Method 'findAllWorkersByName' started working with the parameter name: '{}'", name);
+        logger.info("Method 'findAllWorkersByName' is calling method 'findAllWorkersByName' of {}",
                 WorkerRepository.class.getName());
 
         Optional<List<Worker>> workerList = workerRepository.findAllWorkersByName(name);
@@ -105,8 +105,8 @@ public class WorkerService {
     }
 
     @Transactional
-    public List<Worker> getAllWorkersByPosition(String position) {
-        logger.debug("Method 'getAllWorkersByPosition' started working with the parameter position: '{}'", position);
+    public List<Worker> findAllWorkersByPosition(String position) {
+        logger.debug("Method 'findAllWorkersByPosition' started working with the parameter position: '{}'", position);
 
         if (!position.equalsIgnoreCase("BackendDeveloper") &&
             !position.equalsIgnoreCase("FrontendDeveloper") &&
@@ -114,7 +114,7 @@ public class WorkerService {
             logger.warn("There is no position named '{}'", position);
             throw new InvalidPositionValue("There is no position with name " + position);
         }
-        logger.info("Method 'getAllWorkersByPosition' is calling method 'findAllWorkersByPosition' " +
+        logger.info("Method 'findAllWorkersByPosition' is calling method 'findAllWorkersByPosition' " +
                 "of " + WorkerRepository.class.getName());
         Optional<List<Worker>> workerList = workerRepository.findAllWorkersByPosition(position);
         if (workerList.isPresent() && !workerList.get().isEmpty()) {

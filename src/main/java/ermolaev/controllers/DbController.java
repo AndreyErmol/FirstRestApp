@@ -27,7 +27,7 @@ public class DbController {
     @GetMapping("worker/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Worker getWorkerById(@PathVariable("id") int id) {
-        return workerService.getWorkerById(id);
+        return workerService.findWorkerById(id);
     }
 
     @GetMapping("workers")
@@ -53,18 +53,18 @@ public class DbController {
     @ResponseStatus(HttpStatus.FOUND)
     public int findWorkerId(@RequestParam("name") String name,
                             @RequestParam("email") String email) {
-        return workerService.getWorkerId(name, email);
+        return workerService.findWorkerId(name, email);
     }
 
     @GetMapping("workers/find/by/name/{name}")
     @ResponseStatus(HttpStatus.FOUND)
     public List<Worker> findAllWorkersByName(@PathVariable("name") String name) {
-        return workerService.getAllWorkersByName(name);
+        return workerService.findAllWorkersByName(name);
     }
 
     @GetMapping("workers/find/by/position/{position}")
     @ResponseStatus(HttpStatus.FOUND)
     public List<Worker> findAllWorkersByPosition(@PathVariable("position") String position) {
-        return workerService.getAllWorkersByPosition(position);
+        return workerService.findAllWorkersByPosition(position);
     }
 }

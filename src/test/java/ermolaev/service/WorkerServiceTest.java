@@ -44,11 +44,11 @@ class WorkerServiceTest {
     }
 
     @Test
-    void getWorkerById_workerExists_shouldReturnWorker() {
+    void findWorkerById_workerExists_shouldReturnWorker() {
         initializeElements();
         int workerId = 1;
 
-        Worker worker = workerService.getWorkerById(workerId);
+        Worker worker = workerService.findWorkerById(workerId);
 
         assertThat(worker).isNotNull();
         assertEquals(worker.getName(), "Andrew");
@@ -56,15 +56,15 @@ class WorkerServiceTest {
     }
 
     @Test
-    void getWorkerById_workerDoesNotExist_shouldThrowException() {
+    void findWorkerById_workerDoesNotExist_shouldThrowException() {
         int workerId = 10000;
-        assertThrows(NoWorkerFound.class, () -> workerService.getWorkerById(workerId));
+        assertThrows(NoWorkerFound.class, () -> workerService.findWorkerById(workerId));
     }
 
     @Test
-    void getWorkerById_invalidId_shouldThrowInvalidIdValue() {
+    void findWorkerById_invalidId_shouldThrowInvalidIdValue() {
         int workerId = 0;
-        assertThrows(InvalidIdValue.class, () -> workerService.getWorkerById(workerId));
+        assertThrows(InvalidIdValue.class, () -> workerService.findWorkerById(workerId));
     }
 
     @Test
@@ -164,7 +164,7 @@ class WorkerServiceTest {
         String name = "Alex";
         String email = "alex@email.com";
 
-        int id = workerService.getWorkerId(name, email);
+        int id = workerService.findWorkerId(name, email);
 
         assertEquals(id, 3);
     }
@@ -174,7 +174,7 @@ class WorkerServiceTest {
         String name = "test";
         String email = "test";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.getWorkerId(name, email));
+        assertThrows(NoWorkerFound.class, () -> workerService.findWorkerId(name, email));
     }
 
     @Test
@@ -182,7 +182,7 @@ class WorkerServiceTest {
         initializeElements();
         String name = "Andrew";
 
-        List<Worker> workerList = workerService.getAllWorkersByName(name);
+        List<Worker> workerList = workerService.findAllWorkersByName(name);
 
         assertThat(workerList).isNotNull();
         assertThat(workerList).hasSize(2);
@@ -193,20 +193,20 @@ class WorkerServiceTest {
     }
 
     @Test
-    void getAllWorkersByName_workersDoesNotExist_shouldThrowException() {
+    void findAllWorkersByName_workersDoesNotExist_shouldThrowException() {
         initializeElements();
         String name = "Test";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.getAllWorkersByName(name));
+        assertThrows(NoWorkerFound.class, () -> workerService.findAllWorkersByName(name));
         dataHasNotBeenChangedTest();
     }
 
     @Test
-    void getAllWorkersByPosition_workersExist_shouldReturnListOfWorkers() {
+    void findAllWorkersByPosition_workersExist_shouldReturnListOfWorkers() {
         initializeElements();
         String position = "FrontendDeveloper";
 
-        List<Worker> workerList = workerService.getAllWorkersByPosition(position);
+        List<Worker> workerList = workerService.findAllWorkersByPosition(position);
 
         assertThat(workerList).isNotNull();
         assertThat(workerList).hasSize(2);
@@ -217,23 +217,23 @@ class WorkerServiceTest {
     }
 
     @Test
-    void getAllWorkersByPosition_invalidPosition_shouldThrowException() {
+    void findAllWorkersByPosition_invalidPosition_shouldThrowException() {
         initializeElements();
         String position = "test";
 
-        assertThrows(InvalidPositionValue.class, () -> workerService.getAllWorkersByPosition(position));
+        assertThrows(InvalidPositionValue.class, () -> workerService.findAllWorkersByPosition(position));
 
         dataHasNotBeenChangedTest();
     }
 
     @Test
-    void getAllWorkersByPosition_noWorkersByPosition_shouldThrowException() {
+    void findAllWorkersByPosition_noWorkersByPosition_shouldThrowException() {
         testEntityManager.persistAndFlush(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"));
         testEntityManager.persistAndFlush(new FrontendDeveloper("Alex", "alex@email.com"));
         testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
         String position = "DataScientist";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.getAllWorkersByPosition(position));
+        assertThrows(NoWorkerFound.class, () -> workerService.findAllWorkersByPosition(position));
 
         List<Worker> workerList = workerService.getAllWorkers();
         assertThat(workerList).isNotNull();
