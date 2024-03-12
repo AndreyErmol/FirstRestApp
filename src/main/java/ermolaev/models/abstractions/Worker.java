@@ -6,10 +6,18 @@ import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "workers")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "position")
 @JsonSubTypes({
@@ -22,39 +30,14 @@ public abstract class Worker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
+
     @Column(name = "workername", nullable = false)
     private String name;
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public abstract void doJob();
-
-    public Worker() {
-    }
 
     public Worker(String name, String email) {
         this.name = name;
