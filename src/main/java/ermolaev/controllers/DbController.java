@@ -21,50 +21,50 @@ public class DbController {
     @PostMapping("worker/add")
     @ResponseStatus(HttpStatus.CREATED)
     public Worker addNewWorker(@RequestBody Worker worker) {
-        return workerService.addWorker(worker);
+        return workerService.save(worker);
     }
 
     @GetMapping("worker/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Worker getWorkerById(@PathVariable("id") int id) {
-        return workerService.findWorkerById(id);
+        return workerService.find(id);
     }
 
     @GetMapping("workers")
     @ResponseStatus(HttpStatus.FOUND)
     public List<Worker> getAllWorkers() {
-        return workerService.getAllWorkers();
+        return workerService.findAll();
     }
 
     @DeleteMapping("worker/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteWorkerById(@PathVariable("id") int id) {
-        workerService.deleteWorkerById(id);
+        workerService.delete(id);
     }
 
     @DeleteMapping("worker")
     @ResponseStatus(HttpStatus.OK)
     public void deleteWorkerByNameAndEmail(@RequestParam("name") String name,
                                            @RequestParam("email") String email) {
-        workerService.deleteWorkerByNameAndEmail(name, email);
+        workerService.delete(name, email);
     }
 
     @GetMapping("worker/find/id")
     @ResponseStatus(HttpStatus.FOUND)
     public int findWorkerId(@RequestParam("name") String name,
                             @RequestParam("email") String email) {
-        return workerService.findWorkerId(name, email);
+        return workerService.findId(name, email);
     }
 
     @GetMapping("workers/find/by/name/{name}")
     @ResponseStatus(HttpStatus.FOUND)
     public List<Worker> findAllWorkersByName(@PathVariable("name") String name) {
-        return workerService.findAllWorkersByName(name);
+        return workerService.findAllWithName(name);
     }
 
     @GetMapping("workers/find/by/position/{position}")
     @ResponseStatus(HttpStatus.FOUND)
     public List<Worker> findAllWorkersByPosition(@PathVariable("position") String position) {
-        return workerService.findAllWorkersByPosition(position);
+        return workerService.findAllWithPosition(position);
     }
 }

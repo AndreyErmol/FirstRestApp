@@ -13,11 +13,11 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 @Table(name = "workers")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "position")
 @JsonSubTypes({
@@ -71,7 +71,7 @@ public abstract class Worker {
 
     @Override
     public String toString() {
-        var className = "Worker";
+        String className = "Worker";
 
         if (getClass().equals(BackendDeveloper.class)) {
             className = "Backend developer";
