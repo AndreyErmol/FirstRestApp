@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class DatabaseChecker {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseChecker.class);
 
+    private DatabaseChecker() {}
+
     public static void checkConnection(JdbcTemplate jdbcTemplate) {
         try {
             logger.info("Trying to send a test request to data base.");

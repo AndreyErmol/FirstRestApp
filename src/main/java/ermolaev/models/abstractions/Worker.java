@@ -19,7 +19,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "workers")
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "position")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "position")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = BackendDeveloper.class, name = "backend"),
         @JsonSubTypes.Type(value = FrontendDeveloper.class, name = "frontend"),
@@ -39,7 +39,7 @@ public abstract class Worker {
 
     public abstract void doJob();
 
-    public Worker(String name, String email) {
+    protected Worker(String name, String email) {
         this.name = name;
         this.email = email;
     }

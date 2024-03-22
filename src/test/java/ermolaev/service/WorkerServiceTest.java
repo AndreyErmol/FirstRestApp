@@ -20,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -51,8 +50,8 @@ class WorkerServiceTest {
         Worker worker = workerService.find(workerId);
 
         assertThat(worker).isNotNull();
-        assertEquals(worker.getName(), "Andrew");
-        assertEquals(worker.getEmail(), "fylhtdrf@yandex.ru");
+        assertEquals("Andrew", worker.getName());
+        assertEquals("fylhtdrf@yandex.ru", worker.getEmail());
     }
 
     @Test
@@ -78,8 +77,10 @@ class WorkerServiceTest {
 
         List<Worker> workerList = workerService.findAll();
 
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).isEqualTo(shouldGet);
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).isEqualTo(shouldGet)
+        );
     }
 
     @Test
@@ -124,8 +125,12 @@ class WorkerServiceTest {
         workerService.save(workerToAdd);
 
         List<Worker> workerList = workerService.findAll();
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(1);
+
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).hasSize(1)
+        );
+
         assertEquals(workerList.get(0), workerToAdd);
     }
 
@@ -138,8 +143,12 @@ class WorkerServiceTest {
         workerService.delete(name, email);
 
         List<Worker> workerList = workerService.findAll();
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(3);
+
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).hasSize(3)
+        );
+
         assertEquals(workerList, new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
                 new DataScientist("Andrew", "secondAndrew@email.com"),
@@ -166,7 +175,7 @@ class WorkerServiceTest {
 
         int id = workerService.findId(name, email);
 
-        assertEquals(id, 3);
+        assertEquals(3, id);
     }
 
     @Test
@@ -184,8 +193,11 @@ class WorkerServiceTest {
 
         List<Worker> workerList = workerService.findAllWithName(name);
 
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(2);
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).hasSize(2)
+        );
+
         assertEquals(workerList, new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
                 new DataScientist("Andrew", "secondAndrew@email.com")
@@ -208,8 +220,11 @@ class WorkerServiceTest {
 
         List<Worker> workerList = workerService.findAllWithPosition(position);
 
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(2);
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).hasSize(2)
+        );
+
         assertEquals(workerList, new ArrayList<>(Arrays.asList(
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
@@ -236,8 +251,12 @@ class WorkerServiceTest {
         assertThrows(NoWorkerFound.class, () -> workerService.findAllWithPosition(position));
 
         List<Worker> workerList = workerService.findAll();
-        assertThat(workerList).isNotNull();
-        assertThat(workerList).hasSize(3);
+
+        assertAll(
+                () -> assertThat(workerList).isNotNull(),
+                () -> assertThat(workerList).hasSize(3)
+        );
+
         assertEquals(workerList, new ArrayList<>(Arrays.asList(
                 new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"),
                 new FrontendDeveloper("Alex", "alex@email.com"),
