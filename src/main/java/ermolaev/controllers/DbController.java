@@ -38,21 +38,20 @@ public class DbController {
 
     @DeleteMapping("worker/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteWorkerById(@PathVariable("id") int id) {
-        workerService.delete(id);
+    public Worker deleteWorkerById(@PathVariable("id") int id) {
+        return workerService.delete(id);
     }
 
     @DeleteMapping("worker")
     @ResponseStatus(HttpStatus.FOUND)
-    public void deleteWorkerByNameAndEmail(String email) {
-        workerService.delete(email);
+    public int deleteWorkerByEmail(@RequestParam("email") String email) {
+        return workerService.delete(email);
     }
 
     @GetMapping("worker/find/id")
     @ResponseStatus(HttpStatus.FOUND)
-    public int findWorkerId(@RequestParam("name") String name,
-                            @RequestParam("email") String email) {
-        return workerService.findId(name, email);
+    public int findWorkerId(@RequestParam("email") String email) {
+        return workerService.findId(email);
     }
 
     @GetMapping("workers/find/by/name/{name}")

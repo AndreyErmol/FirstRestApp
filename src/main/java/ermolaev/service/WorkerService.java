@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,44 +63,51 @@ public class WorkerService {
     }
 
     @Transactional
-    public void delete(int id) {
+    public Worker delete(int id) {
         logger.debug("Method 'delete' started working with the parameter id: '{}'", id);
         logger.info("Method 'delete' is calling method 'deleteById' of {}",
                 WorkerRepository.class.getName());
 
+        Optional<Worker> workerToDelete = workerRepository.findById(id);
+
+        if (workerToDelete.isEmpty()) {
+            throw new NoWorkerFound("No worker found by id " + id);
+        }
+
         workerRepository.deleteById(id);
+        return workerToDelete.get();
     }
 
     @Transactional
-    public void delete(String email) {
+    public int delete(String email) {
         logger.debug("Method 'delete' started working with the " +
                         "parameter email: '{}'", email);
-
         logger.info("Method 'delete' is calling method 'deleteByEmail' of {}",
                 WorkerRepository.class.getName());
 
-//        long deletedWorkers = workerRepository.deleteByNameAndEmail(name, email);
-        workerRepository.deleteByEmail(email);
-//        workerRepository.findid
-//        if (deletedWorkers.isEmpty() || deletedWorkers.get().isEmpty()) {
-//            throw new NoWorkerFound("No workers found with name " + name + " and email " + email);
-//        }
-//        return deletedWorkers;
+        Optional<Integer> workerToDeleteId = workerRepository.findIdByEmail(email);
+
+        if (workerToDeleteId.isEmpty()) {
+            throw new NoWorkerFound("No worker found with email " + email);
+        }
+
+        workerRepository.deleteById(workerToDeleteId.get());
+        return workerToDeleteId.get();
     }
 
-    public int findId(String name, String email) {
-        logger.debug("Method 'findId' started working with the parameters name: '{}', email: '{}'", name, email);
-        logger.info("Method 'findId' is calling method 'findIdByNameAndEmail' of {}",
+    public int findId(String email) {
+        logger.debug("Method 'findId' started working with the parameter email: '{}'", email);
+        logger.info("Method 'findId' is calling method 'findIdByEmail' of {}",
                 WorkerRepository.class.getName());
 
-        Optional<Integer> ans = workerRepository.findIdByNameAndEmail(name, email);
+        Optional<Integer> ans = workerRepository.findIdByEmail(email);
 
         if (ans.isPresent()) {
             return ans.get();
         }
 
-        logger.info("Couldn't find an employee with name '{}' and email '{}'", name, email);
-        throw new NoWorkerFound("Couldn't find an employee with name " + name + " and email " + email);
+        logger.info("Couldn't find an employee with email '{}'", email);
+        throw new NoWorkerFound("Couldn't find an employee with email " + email);
     }
 
     public List<Worker> findAllWithName(String name) {

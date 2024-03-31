@@ -111,8 +111,7 @@ class WorkerServiceTest {
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         ));
 
-        workerService.delete(workerId);
-
+        assertThrows(NoWorkerFound.class, () -> workerService.delete(workerId));
         List<Worker> workerList = workerService.findAll();
         assertThat(workerList).isNotNull();
         assertEquals(workerList, shouldGet);
@@ -135,7 +134,7 @@ class WorkerServiceTest {
     }
 
     @Test
-    void deleteByNameAndEmail_workerExists_shouldDeleteWorker() {
+    void deleteByEmail_workerExists_shouldDeleteWorker() {
         initializeElements();
         String email = "alex@email.com";
 
@@ -155,33 +154,31 @@ class WorkerServiceTest {
         )));
     }
 
-//    @Test
-//    void deleteByNameAndEmail_workerDoesNotExists_shouldThrowException() {
-//        initializeElements();
-//        String email = "test@email.com";
-//
-//        assertThrows(NoWorkerFound.class, () -> workerService.delete(email));
-//
-//        dataHasNotBeenChangedTest();
-//    }
+    @Test
+    void deleteByEmail_workerDoesNotExists_shouldThrowException() {
+        initializeElements();
+        String email = "test@email.com";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.delete(email));
+
+        dataHasNotBeenChangedTest();
+    }
 
     @Test
     void findId_workerExists_shouldReturnWorkerId() {
         initializeElements();
-        String name = "Alex";
         String email = "alex@email.com";
 
-        int id = workerService.findId(name, email);
+        int id = workerService.findId(email);
 
         assertEquals(3, id);
     }
 
     @Test
     void findId_workerExists_shouldThrowException() {
-        String name = "test";
         String email = "test";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.findId(name, email));
+        assertThrows(NoWorkerFound.class, () -> workerService.findId(email));
     }
 
     @Test
