@@ -39,3 +39,8 @@ i
 9src/main/java/ermolaev/models/impl/FrontendDeveloper.java,1/a/1a5ae0ad183342bec94c807c56cd3e41e79c0587
 e
 5src/test/java/ermolaev/service/WorkerServiceTest.java,9/9/996026bd6557bb982aede0151b907afb1f3cac94
+:
+
+Dockerfile,6/6/6651ddff6eb82c840ced7c1dddee15c6e1913dd4
+C
+docker-compose.yaml,e/f/ef8def03dc8f162799089e9b5f4321201c8810d5

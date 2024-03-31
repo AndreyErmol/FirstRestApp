@@ -44,9 +44,8 @@ public class DbController {
 
     @DeleteMapping("worker")
     @ResponseStatus(HttpStatus.FOUND)
-    public List<Worker> deleteWorkerByNameAndEmail(@RequestParam("name") String name,
-                                           @RequestParam("email") String email) {
-        return workerService.delete(name, email);
+    public void deleteWorkerByNameAndEmail(String email) {
+        workerService.delete(email);
     }
 
     @GetMapping("worker/find/id")
