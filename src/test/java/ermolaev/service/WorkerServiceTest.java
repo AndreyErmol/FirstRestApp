@@ -186,7 +186,7 @@ class WorkerServiceTest {
         initializeElements();
         String name = "Andrew";
 
-        List<Worker> workerList = workerService.findAllWithName(name);
+        List<Worker> workerList = workerService.findAllByName(name);
 
         assertAll(
                 () -> assertThat(workerList).isNotNull(),
@@ -204,7 +204,7 @@ class WorkerServiceTest {
         initializeElements();
         String name = "Test";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.findAllWithName(name));
+        assertThrows(NoWorkerFound.class, () -> workerService.findAllByName(name));
         dataHasNotBeenChangedTest();
     }
 
@@ -213,7 +213,7 @@ class WorkerServiceTest {
         initializeElements();
         String position = "FrontendDeveloper";
 
-        List<Worker> workerList = workerService.findAllWithPosition(position);
+        List<Worker> workerList = workerService.findAllByPosition(position);
 
         assertAll(
                 () -> assertThat(workerList).isNotNull(),
@@ -231,7 +231,7 @@ class WorkerServiceTest {
         initializeElements();
         String position = "test";
 
-        assertThrows(InvalidPositionValue.class, () -> workerService.findAllWithPosition(position));
+        assertThrows(InvalidPositionValue.class, () -> workerService.findAllByPosition(position));
 
         dataHasNotBeenChangedTest();
     }
@@ -243,7 +243,7 @@ class WorkerServiceTest {
         testEntityManager.persistAndFlush(new FrontendDeveloper("Michael", "michael@yandex.ru"));
         String position = "DataScientist";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.findAllWithPosition(position));
+        assertThrows(NoWorkerFound.class, () -> workerService.findAllByPosition(position));
 
         List<Worker> workerList = workerService.findAll();
 
@@ -257,6 +257,28 @@ class WorkerServiceTest {
                 new FrontendDeveloper("Alex", "alex@email.com"),
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         )));
+    }
+
+    @Test
+    void findByEmail_noWorkerWithEmail_shouldThrowException() {
+        initializeElements();
+        String email = "noSuchEmail@email.com";
+
+        assertThrows(NoWorkerFound.class, () -> workerService.findByEmail(email));
+
+        dataHasNotBeenChangedTest();
+    }
+
+    @Test
+    void findByEmail_workerExists_shouldReturnWorker() {
+        initializeElements();
+        String email = "fylhtdrf@yandex.ru";
+
+        Worker worker = workerService.findByEmail(email);
+
+        assertEquals(new BackendDeveloper("Andrew", "fylhtdrf@yandex.ru"), worker);
+
+        dataHasNotBeenChangedTest();
     }
 
     void dataHasNotBeenChangedTest() {

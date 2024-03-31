@@ -18,4 +18,7 @@ public interface WorkerRepository extends JpaRepository<Worker, Integer> {
     Optional<List<Worker>> findAllByPosition(@Param("position") String position);
 
     Optional<List<Worker>> findAllByName(@Param("name") String name);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM workers WHERE email= :email")
+    Optional<Worker> findByEmail(@Param("email") String email);
 }
