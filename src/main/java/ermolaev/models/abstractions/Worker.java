@@ -6,10 +6,7 @@ import ermolaev.models.impl.BackendDeveloper;
 import ermolaev.models.impl.DataScientist;
 import ermolaev.models.impl.FrontendDeveloper;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 

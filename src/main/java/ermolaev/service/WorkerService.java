@@ -7,23 +7,19 @@ import ermolaev.exceptions.InvalidRequestBody;
 import ermolaev.exceptions.NoWorkerFound;
 import ermolaev.models.abstractions.Worker;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WorkerService {
     private static final Logger logger = LoggerFactory.getLogger(WorkerService.class);
     private final WorkerRepository workerRepository;
-
-    @Autowired
-    public WorkerService(WorkerRepository workerRepository) {
-        this.workerRepository = workerRepository;
-    }
 
     public Worker find(int id) {
         logger.debug("Method 'find' started working with the parameter id: {}", id);

@@ -44,6 +44,21 @@ public class DbConfig {
     public JdbcTemplate jdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
         DatabaseChecker.checkConnection(jdbcTemplate);
+        createTablesIfNotExists(jdbcTemplate);
         return jdbcTemplate;
+    }
+
+    private void createTablesIfNotExists(JdbcTemplate jdbcTemplate) {
+        createTableWorkersIfNotExists(jdbcTemplate);
+    }
+
+    private void createTableWorkersIfNotExists(JdbcTemplate jdbcTemplate) {
+        String createTableIfNotExistsCommand = "CREATE TABLE IF NOT EXISTS workers(" +
+                "id serial PRIMARY KEY," +
+                "workername varchar(50) NOT NULL," +
+                "email varchar(50) UNIQUE NOT NULL," +
+                "dtype varchar(20) NOT NULL" +
+                ")";
+        jdbcTemplate.execute(createTableIfNotExistsCommand);
     }
 }
