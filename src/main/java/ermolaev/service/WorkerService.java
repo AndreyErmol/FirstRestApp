@@ -22,18 +22,18 @@ public class WorkerService {
     private final WorkerRepository workerRepository;
 
     public Worker find(int id) {
-        logger.debug("Method 'find' started working with the parameter id: {}", id);
+        logger.debug(Logs.METHOD_STARTED_WORKING, "find", "id", id);
 
         if (id <= 0) {
             logger.info("ID value should be greater than 0");
             throw new InvalidIdValue("ID value should be greater than 0");
         }
 
-        logger.info("Method 'find' is calling method 'findById' of worker repository.");
+        logger.info(Logs.METHOD_CALLING_METHOD, "find", "findById", workerRepository.getClass().getName());
         Optional<Worker> worker = workerRepository.findById(id);
 
         if (worker.isPresent()) {
-            logger.info("The worker has been found: {}", worker.get());
+            logger.info(Logs.WORKER_FOUND, worker.get());
             return worker.get();
         }
 
@@ -42,19 +42,18 @@ public class WorkerService {
     }
 
     public List<Worker> findAll() {
-        logger.info("Method 'findAll' is calling method 'findAll' of {}", WorkerRepository.class.getName());
-        return workerRepository.findAll();
+        logger.debug(Logs.METHOD_CALLING_METHOD, "findAll", "findAll", WorkerRepository.class.getName());
+        return (List<Worker>) workerRepository.findAll();
     }
 
     public int findId(String email) {
-        logger.debug("Method 'findId' started working with the parameter email: {}", email);
-        logger.info("Method 'findId' is calling method 'findIdByEmail' of {}",
-                WorkerRepository.class.getName());
+        logger.debug(Logs.METHOD_STARTED_WORKING, "findId", "email", email);
+        logger.debug(Logs.METHOD_CALLING_METHOD, "findId", "findIdByEmail", WorkerRepository.class.getName());
 
         Optional<Integer> worker = workerRepository.findIdByEmail(email);
 
         if (worker.isPresent()) {
-            logger.info("The worker has been found: {}", worker.get());
+            logger.info(Logs.WORKER_FOUND, worker.get());
             return worker.get();
         }
 
@@ -64,18 +63,23 @@ public class WorkerService {
 
     @Transactional
     public Worker findByEmail(String email) {
-        logger.debug("Method findByEmail started working with the parameter email: {}", email);
-        logger.info("Method 'findByEmail' is calling method 'findId' of {}",
-                                    WorkerService.class.getName());
-        int workerId = findId(email);
-        logger.info("Return value of 'findId' method is {}", workerId);
-        return find(workerId);
+        logger.debug(Logs.METHOD_STARTED_WORKING, "findByEmail", "email", email);
+        logger.debug(Logs.METHOD_CALLING_METHOD, "findByEmail", "findByEmail", WorkerRepository.class.getName());
+
+        Optional<Worker> foundWorker = workerRepository.findByEmail(email);
+
+        if (foundWorker.isPresent()) {
+            logger.info(Logs.WORKER_FOUND, foundWorker.get());
+            return foundWorker.get();
+        }
+
+        logger.info(Logs.NO_WORKER_FOUND_WITH, "email", email);
+        throw new NoWorkerFound("No worker found with email " + email);
     }
 
     public List<Worker> findAllByName(String name) {
-        logger.debug("Method 'findAllByName' started working with the parameter name: {}", name);
-        logger.info("Method 'findAllByName' is calling method 'findAllByName' of {}",
-                WorkerRepository.class.getName());
+        logger.debug(Logs.METHOD_STARTED_WORKING, "findAllByName", "name", name);
+        logger.debug(Logs.METHOD_CALLING_METHOD, "findAllByName", "findAllByName", WorkerRepository.class.getName());
 
         Optional<List<Worker>> workerList = workerRepository.findAllByName(name);
 
@@ -84,12 +88,12 @@ public class WorkerService {
             return workerList.get();
         }
 
-        logger.info("No workers found with name {}", name);
+        logger.info(Logs.NO_WORKER_FOUND_WITH, "name", name);
         throw new NoWorkerFound("No workers found with name " + name);
     }
 
     public List<Worker> findAllByPosition(String position) {
-        logger.debug("Method 'findAllByPosition' started working with the parameter position: {}", position);
+        logger.debug(Logs.METHOD_STARTED_WORKING, "findAllByPosition", "position", position);
 
         if (!position.equalsIgnoreCase("BackendDeveloper") &&
                 !position.equalsIgnoreCase("FrontendDeveloper") &&
@@ -98,8 +102,8 @@ public class WorkerService {
             throw new InvalidPositionValue("There is no position with name " + position);
         }
 
-        logger.info("Method 'findAllByPosition' is calling method 'findAllByPosition' " +
-                "of {}", WorkerRepository.class.getName());
+        logger.debug(Logs.METHOD_CALLING_METHOD, "findAllByPosition", "findAllByPosition",
+                WorkerRepository.class.getName());
 
         Optional<List<Worker>> workerList = workerRepository.findAllByPosition(position);
 
@@ -108,58 +112,34 @@ public class WorkerService {
             return workerList.get();
         }
 
-        logger.info("No workers found with position {}", position);
+        logger.info(Logs.NO_WORKER_FOUND_WITH, "position", position);
         throw new NoWorkerFound("No workers found with position " + position);
     }
 
     @Transactional
     public Worker save(Worker worker) {
-        logger.debug("Method 'save' started working with the parameter worker: {}", worker);
+        logger.debug(Logs.METHOD_STARTED_WORKING, "save", "worker", worker);
 
         if (worker == null || worker.getName() == null || worker.getEmail() == null) {
             logger.info("Invalid request body, can't initialize {}", worker);
             throw new InvalidRequestBody("Invalid request body, can't initialize " + worker);
         }
 
-        logger.info("Method 'save' is calling method 'save' of {}", WorkerRepository.class.getName());
+        logger.debug(Logs.METHOD_CALLING_METHOD, "save", "save", WorkerRepository.class.getName());
         return workerRepository.save(worker);
     }
 
     @Transactional
-    public Worker delete(int id) {
-        logger.debug("Method 'delete' started working with the parameter id: {}", id);
-        logger.info("Method 'delete' is calling method 'findById' of {}",
-                WorkerRepository.class.getName());
-
-        Optional<Worker> workerToDelete = workerRepository.findById(id);
-
-        if (workerToDelete.isEmpty()) {
-            logger.info("No workers found by id {}", id);
-            throw new NoWorkerFound("No worker found by id " + id);
-        }
-
-        logger.info("Method 'delete' is calling method 'deleteById' of {}",
-                WorkerRepository.class.getName());
+    public void delete(int id) {
+        logger.debug(Logs.METHOD_STARTED_WORKING, "delete", "id", id);
+        logger.debug(Logs.METHOD_CALLING_METHOD, "delete", "deleteById", WorkerRepository.class.getName());
         workerRepository.deleteById(id);
-        return workerToDelete.get();
     }
 
     @Transactional
-    public int delete(String email) {
-        logger.debug("Method 'delete' started working with the " +
-                        "parameter email: {}", email);
-        logger.info("Method 'delete' is calling method 'findIdByEmail' of {}",
-                WorkerRepository.class.getName());
-
-        Optional<Integer> workerToDeleteId = workerRepository.findIdByEmail(email);
-
-        if (workerToDeleteId.isEmpty()) {
-            throw new NoWorkerFound("No worker found with email " + email);
-        }
-
-        logger.info("Method 'delete' is calling method 'deleteByEmail' of {}",
-                        WorkerRepository.class.getName());
-        workerRepository.deleteById(workerToDeleteId.get());
-        return workerToDeleteId.get();
+    public void delete(String email) {
+        logger.debug(Logs.METHOD_STARTED_WORKING, "delete", "email", email);
+        logger.debug(Logs.METHOD_CALLING_METHOD, "delete", "deleteByEmail", WorkerRepository.class.getName());
+        workerRepository.deleteByEmail(email);
     }
 }

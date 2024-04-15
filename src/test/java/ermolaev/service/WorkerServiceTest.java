@@ -111,7 +111,8 @@ class WorkerServiceTest {
                 new FrontendDeveloper("Michael", "michael@yandex.ru")
         ));
 
-        assertThrows(NoWorkerFound.class, () -> workerService.delete(workerId));
+        workerService.delete(workerId);
+
         List<Worker> workerList = workerService.findAll();
         assertThat(workerList).isNotNull();
         assertEquals(workerList, shouldGet);
@@ -155,11 +156,11 @@ class WorkerServiceTest {
     }
 
     @Test
-    void deleteByEmail_workerDoesNotExists_shouldThrowException() {
+    void deleteByEmail_workerDoesNotExists_shouldNotDelete() {
         initializeElements();
         String email = "test@email.com";
 
-        assertThrows(NoWorkerFound.class, () -> workerService.delete(email));
+        workerService.delete(email);
 
         dataHasNotBeenChangedTest();
     }

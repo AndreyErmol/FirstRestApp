@@ -44,14 +44,14 @@ public class DbController {
 
     @DeleteMapping("worker/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Worker deleteWorkerById(@PathVariable("id") int id) {
-        return workerService.delete(id);
+    public void deleteWorkerById(@PathVariable("id") int id) {
+        workerService.delete(id);
     }
 
     @DeleteMapping("worker")
-    @ResponseStatus(HttpStatus.FOUND)
-    public int deleteWorkerByEmail(@RequestParam("email") String email) {
-        return workerService.delete(email);
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteWorkerByEmail(@RequestParam("email") String email) {
+        workerService.delete(email);
     }
 
     @GetMapping("worker/find/id")
