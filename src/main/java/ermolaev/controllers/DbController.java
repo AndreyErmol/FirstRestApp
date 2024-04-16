@@ -2,7 +2,6 @@ package ermolaev.controllers;
 
 import ermolaev.models.abstractions.Worker;
 import ermolaev.service.WorkerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,6 @@ import java.util.List;
 public class DbController {
     private final WorkerService workerService;
 
-    @Autowired
     public DbController(WorkerService workerService) {
         this.workerService = workerService;
     }

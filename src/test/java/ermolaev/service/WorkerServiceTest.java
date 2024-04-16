@@ -126,6 +126,8 @@ class WorkerServiceTest {
 
         List<Worker> workerList = workerService.findAll();
 
+        assertNotNull(workerToAdd.getId());
+
         assertAll(
                 () -> assertThat(workerList).isNotNull(),
                 () -> assertThat(workerList).hasSize(1)

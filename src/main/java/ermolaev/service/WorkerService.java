@@ -29,7 +29,7 @@ public class WorkerService {
             throw new InvalidIdValue("ID value should be greater than 0");
         }
 
-        logger.info(Logs.METHOD_CALLING_METHOD, "find", "findById", workerRepository.getClass().getName());
+        logger.info(Logs.METHOD_CALLING_METHOD, "find", "findById", WorkerRepository.class.getName());
         Optional<Worker> worker = workerRepository.findById(id);
 
         if (worker.isPresent()) {

@@ -26,7 +26,7 @@ public abstract class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private int id;
+    private Integer id;
 
     @Column(name = "workername", nullable = false)
     private String name;
@@ -77,6 +77,6 @@ public abstract class Worker {
         } else if (getClass().equals(DataScientist.class)) {
             className = "Data scientist";
         }
-        return className + " {name: " + name + ", email: " + email + "}";
+        return className + " {id: "+ id + ", name: " + name + ", email: " + email + "}";
     }
 }
