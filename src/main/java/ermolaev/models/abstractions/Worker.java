@@ -28,7 +28,7 @@ public abstract class Worker {
     @Column(name = "id", unique = true)
     private Integer id;
 
-    @Column(name = "workername", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface WorkerRepository extends CrudRepository<Worker, Integer> {
-    @Query(nativeQuery = true, value = "SELECT id FROM workers WHERE email = :email")
+    @Query("SELECT id FROM Worker WHERE email = :email")
     Optional<Integer> findIdByEmail(@Param("email") String email);
 
     @Query(nativeQuery = true, value = "SELECT * FROM workers WHERE dtype = :position")
