@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-workers
+      author: Ermolaev
+      changes:
+        - createTable:
+            tableName: workers
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(200)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: dtype
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
